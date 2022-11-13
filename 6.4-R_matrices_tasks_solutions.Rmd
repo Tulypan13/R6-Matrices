@@ -1,0 +1,207 @@
+---
+title: "Complex in-built objects in R"
+author: "Luciano Gabbanelli"
+date: "2022-10-10"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapse: true
+    smooth_scroll: true
+    theme: journal
+    highlight: kate
+    df_print: paged
+    code_folding: show
+---
+
+## Matrices
+
+## 1. Create a matrix from two vectors
+
+```{r}
+
+my.vector <- matrix(data=c(5:15, 20:30), nrow = 2, ncol = 11, byrow = T)
+my.vector
+
+```
+
+
+
+## 2. Create a matrix from a vector
+
+```{r}
+matrix(c(1:15), nrow = 5, byrow = TRUE)
+matrix(c(1:25), nrow = 5, byrow = TRUE)
+
+matrix(c(1:10), nrow = 5, byrow = TRUE)
+matrix(c(1:10), ncol = 5, byrow = TRUE)
+matrix1 <- matrix(c(1:10), nrow=5 ,ncol=4, byrow = TRUE); matrix1
+
+colnames(matrix1) <- c("1st", "2nd", "3rd", "4th")
+rownames(matrix1) <- c("Row1", "Row2", "Row3", "Row4", "Row5")
+matrix1
+
+matrix1[2,3]
+matrix1['Row3',]
+matrix1[,'4th']
+matrix1[,c(2,4)]
+
+
+```
+
+
+
+
+## 3. Sub-matrices
+
+```{r}
+M = matrix(c(1:25), nrow = 5, byrow = TRUE)
+print(M)
+
+M[,3]
+sub_M <- M[M[,3] > 8,]; sub_M
+
+diag_M <- diag(sub_M); diag_M
+is.vector(diag_M)
+is.list(diag_M)
+
+vector_M <- as.vector(sub_M); vector_M
+vector_M <- as.vector(t(sub_M)); vector_M
+
+## Indices of max and min:
+sub_M
+max(sub_M)
+which(sub_M == max(sub_M))
+# Check the argument:
+which(sub_M == max(sub_M), arr.ind=FALSE)
+which(sub_M == max(sub_M), arr.ind=TRUE)
+which(sub_M == min(sub_M), arr.ind=TRUE)
+
+## Concatenation:
+M
+sub_M
+concat_M <- rbind(M,sub_M);concat_M
+dim(concat_M)
+
+
+sub_M
+## Check how recursion works:
+split(sub_M,c(1,1,1))
+split(sub_M,c(1,1,1,2,2,2))
+split(sub_M,c(1,1,1,2,2,2,3,3,3))
+
+## Implement the partition:
+list_M <- split(sub_M, rep(1:ncol(sub_M), each = nrow(sub_M)))
+list_M
+is.vector(list_M)
+is.list(list_M)
+is.matrix(list_M)
+```
+
+
+
+## 4. Arithmetic operators
+
+```{r}
+
+m1 <- matrix(1:4,nrow=2,byrow=TRUE);m1
+
+m1*m1
+m1+m1
+#etc.
+```
+
+
+
+## 5. Math
+
+```{r}
+M1 <- matrix(1:4,2);M1
+
+M3 <- diag(2, 3);M3
+M4 <- diag(1,2);M4
+M6 <- matrix(c(1,2,1,2),2); M6
+M1%*%M6
+M6%*%M1
+M1%*%M4
+M4%*%M1
+
+```
+
+
+
+## 6. Random matrices
+
+```{r}
+
+numbers_counter <- function(N){
+  random_matrix <- round(matrix(runif(N*N,1,N),nrow=N))
+  my.vector <- vector(mode = "integer", length = N); my.vector
+  for (i in seq_along(1:N)){
+    my.vector[i] <- sum(random_matrix==i)
+    print(paste("The number ", i, "appears ", my.vector[i], "times."))
+  }
+}
+
+numbers_counter(4)
+
+```
+
+
+
+## 7. Solve sistem of equations
+
+```{r}
+
+equations <- matrix(c(
+  c(6, -1, 1), 
+  c(9, -2, 1), 
+  c(3, 1, -2)
+  ), 
+  ncol = 3, nrow = 3, byrow = T)
+
+equations
+
+independent <- c(-4, 0, 0); independent
+
+solve(equations, independent)
+
+```
+
+
+
+## 8. Solve
+
+```{r}
+
+m1 <- matrix(c(5,15,6,0,4,2,0,0,1),ncol=3,nrow = 3); m1
+
+
+?solve
+
+solve(m1)
+
+# Is true or not?
+solve(m1)%*%m1
+m1%*%solve(m1)
+```
+
+
+
+## 9. Trigonomatry. What was that?!
+
+```{r}
+
+v <- c(0,pi/2, pi,3*pi/2,2*pi)
+v
+
+round(mtx_res,0)
+func_list <- list(sin, cos, tan)
+names(func_list) <- c("sine", "cosine", "tangent")
+func_list
+
+mtx_res <- sapply(func_list, mapply, v)
+mtx_res
+
+
+```
